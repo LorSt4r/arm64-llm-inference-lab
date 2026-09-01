@@ -1,5 +1,7 @@
 # ARM64 LLM Inference Lab
 
+[![CI](https://github.com/LorSt4r/arm64-llm-inference-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/LorSt4r/arm64-llm-inference-lab/actions/workflows/ci.yml)
+
 A reproducible systems-engineering case study for CPU-only LLM inference on an
 Oracle Cloud Ampere A1 instance. It includes an OpenAI-compatible benchmark
 harness, Linux memory and process sampling, hardened `systemd` templates, and
