@@ -1,0 +1,60 @@
+[Unit]
+Description=Local llama.cpp inference API
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/opt/llama.cpp
+EnvironmentFile=/etc/llama-server.env
+ExecStart=/opt/llama.cpp/build/bin/llama-server \
+  --model /srv/models/model.gguf \
+  --alias local-model \
+  --host 127.0.0.1 \
+  --port 8080 \
+  --api-key ${LLAMA_API_KEY} \
+  --ctx-size 65536 \
+  --threads 4 \
+  --threads-batch 4 \
+  --parallel 1 \
+  --jinja \
+  --flash-attn on \
+  --mlock \
+  --run-time-repack \
+  --batch-size 2048 \
+  --ubatch-size 512 \
+  --cache-type-k q4_0 \
+  --cache-type-v q4_0 \
+  --ctx-checkpoints 16 \
+  --cache-ram 1536 \
+  --metrics \
+  --log-disable
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=30
+LimitNOFILE=1048576
+LimitMEMLOCK=infinity
+UMask=0077
+
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateTmp=true
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHome=read-only
+ProtectHostname=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectSystem=strict
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+SystemCallArchitectures=native
+CapabilityBoundingSet=CAP_IPC_LOCK
+AmbientCapabilities=CAP_IPC_LOCK
+
+[Install]
+WantedBy=multi-user.target

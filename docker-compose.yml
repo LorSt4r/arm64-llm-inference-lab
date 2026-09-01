@@ -1,0 +1,55 @@
+name: hermes
+
+services:
+  hermes:
+    build:
+      context: .
+      args:
+        HERMES_IMAGE: ${HERMES_IMAGE:-nousresearch/hermes-agent:v2026.7.20}
+    image: hermes-agent-pkm:v2026.7.20
+    container_name: hermes
+    command: ["gateway", "run"]
+    network_mode: host
+    restart: unless-stopped
+    init: true
+    stop_grace_period: 30s
+    cpus: 2.0
+    mem_limit: 2g
+    pids_limit: 256
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=256m
+    environment:
+      HERMES_ALLOW_ROOT_GATEWAY: "1"
+      API_SERVER_ENABLED: "true"
+      API_SERVER_HOST: 127.0.0.1
+      API_SERVER_KEY: ${API_SERVER_KEY:?set API_SERVER_KEY in .env}
+      HERMES_DASHBOARD: "1"
+      HERMES_DASHBOARD_HOST: 127.0.0.1
+      HERMES_DASHBOARD_BASIC_AUTH_USERNAME: ${DASHBOARD_USERNAME:-admin}
+      HERMES_DASHBOARD_BASIC_AUTH_PASSWORD: ${DASHBOARD_PASSWORD:?set DASHBOARD_PASSWORD in .env}
+      HERMES_DASHBOARD_BASIC_AUTH_SECRET: ${DASHBOARD_SECRET:?set DASHBOARD_SECRET in .env}
+    volumes:
+      - type: bind
+        source: ${HERMES_DATA_DIR:-/home/ubuntu/hermes/data}
+        target: /opt/data
+        bind:
+          create_host_path: true
+      - type: bind
+        source: ${PKM_VAULT_DIR:-/home/ubuntu/pkm-vault}
+        target: /vault
+        bind:
+          create_host_path: true
+
+x-casaos:
+  author: self
+  category: self
+  hostname: ${HERMES_PUBLIC_HOSTNAME:-hermes.example.invalid}
+  icon: https://raw.githubusercontent.com/lobehub/lobe-icons/refs/heads/master/packages/static-png/light/hermesagent.png
+  index: /
+  is_uncontrolled: false
+  port_map: ""
+  scheme: https
+  title:
+    custom: ARM64 Inference Lab

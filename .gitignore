@@ -1,0 +1,30 @@
+# Secrets and machine-local state
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.db
+*.sqlite*
+
+# Runtime data and personal knowledge
+/data/
+/backups/
+/benchmark-results/
+/docs/archive/
+/vault/
+
+# External or generated trees
+/llama.cpp/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.DS_Store
+
+# Build products and logs
+/build/
+*.log
+*.zip
+*.tar
+*.tar.gz
